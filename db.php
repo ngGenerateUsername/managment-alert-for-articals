@@ -42,6 +42,45 @@ function get_articles() {
     return $articles;
 }
 
+//fazét el recherche 2 functions
+// function getAllWithNames()
+// {
+//     global $conn;
+
+//     $articles = array();
+
+//     $sql = "SELECT name FROM articles";
+//     $result = $conn->query($sql);
+
+//     if ($result->num_rows > 0) {
+//         while ($row = $result->fetch_object()) {
+//             $articles[] = $row->name;
+//         }
+//     }
+
+//     return $articles;
+
+// }
+
+function search_article($queue)
+{
+    $articles = get_articles();
+    //cout($articles)
+    
+    // echo $queue.'<br/>';    
+
+    $result = array();
+    foreach ($articles as $article) {
+        # code...
+        if( strpos(strtoupper($article->name),strtoupper($queue))!== false)
+        {
+            $result[] = $article;
+        }
+    }
+
+    return json_encode($result);
+}
+
 // na9as
 function dickrement_quantity($id) {
     global $conn;

@@ -8,6 +8,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // hethi li ta5edh
     if (isset($_POST["take"])) {
         dickrement_quantity($_POST["article_id"]);
+        if(isset($_GET['q']))
+        header("Location: index.php?q=".$_GET['q']);
+        else
         header("Location: index.php");
         exit();
     }
@@ -15,12 +18,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // ki tenzel 3alli tefsa5
     if (isset($_POST["delete"])) {
         delete_article($_POST["article_id"]);
+        if(isset($_GET['q']))
+        header("Location: index.php?q=".$_GET['q']);
+        else
         header("Location: index.php");
         exit();
     }
     //kif yrajja3
     if (isset($_POST["retake"])) {
         increment_quantity($_POST["article_id"]);
+        if(isset($_GET['q']))
+        header("Location: index.php?q=".$_GET['q']);
+        else
         header("Location: index.php");
         exit();
     }
@@ -33,7 +42,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
 
     <title>Article Inventory</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    
+ 
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     <style>
  .jumbotron{
     padding-top:10px !important;
@@ -131,7 +145,7 @@ label.theme-switch input[type="checkbox"]:checked + div {
             </div>
             <div class="col-md-6">
                 <h5>Article state <small class="text-muted">(Q: quantity)</small> </h5> 
-                <table class="table">
+                <table class="table" id="example">
                     <thead class="thead-dark">
                         <tr>
                             <th>Name</th>
@@ -169,12 +183,68 @@ label.theme-switch input[type="checkbox"]:checked + div {
       <div></div>
     </label>
 
+    <!-- <input type="search" name="searched" hidden value="<?php echo $_GET['q']; ?>"> -->
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script>
 function myFunction() {
    var element = document.body;
    element.classList.toggle("dark-mode");
 }
 
+// async function searchByName(x)
+// {
+//    var getSearched = await fetch(`http://localhost/inventory/search.php?q=${x}`); //event.target.value
+//    var getJson = await getSearched.json();
+
+
+   
+
+// }
+
+// searchByName("c").then().catch(err=>console.log(err));
+
 </script>
+
+
+
+
+
+    <script>
+    $(document).ready(function () {
+    $('#example').DataTable();
+   
+
+    const urlString = window.location.search;
+    const params = new URLSearchParams(urlString);
+    const name = params.get("q");
+    $('#example').DataTable().search(!name?'':name).draw();
+
+
+
+    $('input[type="search"]').on("change",function(){
+        const getForm = document.querySelectorAll('form');
+        for (let i = 0; i < getForm.length; i++) {
+        getForm[i].action="index.php?q="+$('input[type="search"]').val();
+        console.log(getForm);
+        }
+    });
+
+
+    if(name && name!='')
+    {
+        const getForm = document.querySelectorAll('form');
+        for (let i = 0; i < getForm.length; i++) {
+        getForm[i].action="index.php?q="+$('input[type="search"]').val();
+    }
+}
+    
+
+    
+    
+});
+    </script>
 </body>
 </html>
